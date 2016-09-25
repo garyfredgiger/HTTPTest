@@ -11,25 +11,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.widget.TextView;
 
-import android.app.ProgressDialog;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URI;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
-
-    private ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,29 +34,6 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-
-//        Button button = (Button)findViewById(R.id.button);
-//
-//        button.setOnClickListener(
-//                new Button.OnClickListener()
-//                {
-//                    public void onClick(View v)
-//                    {
-//                        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-//                        alertDialog.setTitle("Alert");
-//                        alertDialog.setMessage("Alert message to be shown");
-//                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-//                                new DialogInterface.OnClickListener()
-//                                {
-//                                    public void onClick(DialogInterface dialog, int which)
-//                                    {
-//                                        dialog.dismiss();
-//                                    }
-//                                });
-//                        alertDialog.show();
-//                    }
-//                }
-//        );
     }
 
     @Override
@@ -106,19 +71,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         protected void onPreExecute(){
-            progress= new ProgressDialog(this.context);
-            progress.setMessage("Loading");
-            progress.show();
         }
 
         @Override
         protected Void doInBackground(String... params) {
             try {
 
-                final TextView outputView = (TextView) findViewById(R.id.showOutput);
-                //URL url = new URL("http://requestb.in/1cs29cy1");
                 URL url = new URL("http://192.168.1.11:8888/api?fizz=buzz");
-
 
                 HttpURLConnection connection = (HttpURLConnection)url.openConnection();
                 String urlParameters = "fizz=buzz";
@@ -128,35 +87,12 @@ public class MainActivity extends AppCompatActivity {
 
                 int responseCode = connection.getResponseCode();
 
-                System.out.println("\nSending 'POST' request to URL : " + url);
-                System.out.println("Post parameters : " + urlParameters);
-                System.out.println("Response Code : " + responseCode);
-
-                final StringBuilder output = new StringBuilder("Request URL " + url);
-                //output.append(System.getProperty("line.separator") + "Request Parameters " + urlParameters);
-                output.append(System.getProperty("line.separator")  + "Response Code " + responseCode);
-                output.append(System.getProperty("line.separator")  + "Type " + "GET");
-                BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String line = "";
-                StringBuilder responseOutput = new StringBuilder();
-                System.out.println("output===============" + br);
-                while((line = br.readLine()) != null ) {
-                    responseOutput.append(line);
-                }
-                br.close();
-
-                output.append(System.getProperty("line.separator") + "Response " + System.getProperty("line.separator") + System.getProperty("line.separator") + responseOutput.toString());
-
                 MainActivity.this.runOnUiThread(new Runnable() {
 
                     @Override
                     public void run() {
-                        outputView.setText(output);
-                        progress.dismiss();
-
                     }
                 });
-
 
             } catch (MalformedURLException e) {
                 // TODO Auto-generated catch block
@@ -167,10 +103,5 @@ public class MainActivity extends AppCompatActivity {
             }
             return null;
         }
-
-//        protected void onPostExecute() {
-//            progress.dismiss();
-//        }
-
     }
 }
